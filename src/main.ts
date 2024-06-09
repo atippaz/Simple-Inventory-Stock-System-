@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { Controller, Get } from '@nestjs/common';
-import ProductModule from './product/product.module';
+import { ProductModule } from './product';
 @Controller()
 class AppController {
   @Get('/')

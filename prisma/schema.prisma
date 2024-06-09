@@ -8,8 +8,47 @@ datasource db {
 }
 
 model product {
-  product_id   Bytes    @id @unique(map: "product_id_UNIQUE") @db.Binary(16)
-  product_name String   @db.VarChar(100)
-  product_qty  Int
-  created_date DateTime @default(now()) @db.DateTime(0)
+  product_id   Int      @id @unique(map: "sku_id_UNIQUE")
+  product_name String   @db.VarChar(45)
+  create_date  DateTime @db.DateTime(0)
+  category     String?  @db.VarChar(45)
+  description  String?  @db.VarChar(200)
+}
+
+model batch {
+  batch_id     Int      @id
+  sku_id       String   @db.VarChar(45)
+  cost         Decimal  @db.Decimal(10, 0)
+  qty          Int
+  created_date DateTime @db.DateTime(0)
+}
+
+model receipt {
+  receipt_id   Int       @id
+  product_id   Int
+  sku_id       String    @db.VarChar(45)
+  batch_id     Int
+  created_date DateTime? @db.DateTime(0)
+}
+
+model requisition {
+  requisition_id Int       @id
+  sku_id         String    @db.VarChar(45)
+  product_id     Int
+  created_on     DateTime? @db.DateTime(0)
+}
+
+model sku {
+  sku_id       String   @id @unique(map: "sku_id_UNIQUE") @db.VarChar(45)
+  product_id   Int
+  created_date DateTime @db.DateTime(0)
+  description  String?  @db.VarChar(255)
+}
+
+model requistion_item {
+  requistion_item_id Int     @id
+  requisition_id     Int
+  batch_id           Int
+  qty                Int
+  cost               Decimal @db.Decimal(10, 0)
 }
