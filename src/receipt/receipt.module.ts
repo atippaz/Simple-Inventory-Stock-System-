@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ProductController } from './receipt.controller';
-import { ProductService } from './receipt.service';
+import { ReceiptController } from './receipt.controller';
+import { ReceiptService } from './receipt.service';
 import PrismaService from 'src/utils/prisma';
 
 @Module({
   imports: [],
-  controllers: [ProductController],
-  providers: [ProductService, PrismaService],
+  controllers: [ReceiptController],
+  providers: [ReceiptService, PrismaService],
 })
-export default class AppModule {
+export default class ReceiptModule {
   constructor() {
     console.log('init product');
   }

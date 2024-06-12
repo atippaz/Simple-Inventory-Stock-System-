@@ -2,6 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { Controller, Get } from '@nestjs/common';
 import { ProductModule } from './product';
+import { ReceiptModule } from './receipt';
+import { RequisitionModule } from './requisition';
+import { LineModule } from './line';
+import { SkuModule } from './sku';
+
 @Controller()
 class AppController {
   @Get('/')
@@ -11,7 +16,13 @@ class AppController {
 }
 
 @Module({
-  imports: [ProductModule],
+  imports: [
+    ProductModule,
+    RequisitionModule,
+    ReceiptModule,
+    LineModule,
+    SkuModule,
+  ],
   controllers: [AppController],
   providers: [],
 })

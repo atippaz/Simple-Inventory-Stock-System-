@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
@@ -8,47 +9,86 @@ datasource db {
 }
 
 model product {
-  product_id   Int      @id @unique(map: "sku_id_UNIQUE")
-  product_name String   @db.VarChar(45)
-  create_date  DateTime @db.DateTime(0)
-  category     String?  @db.VarChar(45)
-  description  String?  @db.VarChar(200)
+  product_id   Int           @id @default(autoincrement())
+  product_name String        @unique(map: "product_name_UNIQUE") @db.VarChar(45)
+  create_date  DateTime      @db.DateTime(0)
+  category     String?       @db.VarChar(45)
+  description  String?       @db.VarChar(200)
+  receipt      receipt[]
+  requisition  requisition[]
+  sku          sku[]
 }
 
 model batch {
-  batch_id     Int      @id
-  sku_id       String   @db.VarChar(45)
-  cost         Decimal  @db.Decimal(10, 0)
-  qty          Int
-  created_date DateTime @db.DateTime(0)
+  batch_id         Int                @id @default(autoincrement())
+  sku_id           String             @db.VarChar(45)
+  cost             Decimal            @db.Decimal(10, 0)
+  qty              Int
+  created_date     DateTime           @db.DateTime(0)
+  sku              sku                @relation(fields: [sku_id], references: [sku_id], onDelete: NoAction, onUpdate: NoAction, map: "batch_sku_id")
+  receipt          receipt[]
+  requisition_item requisition_item[]
+
+  @@index([sku_id])
 }
 
 model receipt {
-  receipt_id   Int       @id
+  receipt_id   Int       @id @default(autoincrement())
   product_id   Int
   sku_id       String    @db.VarChar(45)
   batch_id     Int
   created_date DateTime? @db.DateTime(0)
+  qty          Int?
+  cost         Decimal?  @db.Decimal(10, 0)
+  title        String?   @db.VarChar(255)
+  description  String?   @db.VarChar(255)
+  batch        batch     @relation(fields: [batch_id], references: [batch_id], onDelete: NoAction, onUpdate: NoAction, map: "receipt_batch_id")
+  product      product   @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "receipt_product_id")
+  sku          sku       @relation(fields: [sku_id], references: [sku_id], onDelete: NoAction, onUpdate: NoAction, map: "receipt_sku_id")
+
+  @@index([product_id], map: "product_id_idx")
+  @@index([sku_id])
+  @@index([sku_id], map: "sku_id_idx")
+  @@index([batch_id], map: "receipt_batch_idx")
 }
 
 model requisition {
-  requisition_id Int       @id
-  sku_id         String    @db.VarChar(45)
-  product_id     Int
-  created_on     DateTime? @db.DateTime(0)
+  requisition_id   Int                @id @default(autoincrement())
+  sku_id           String             @db.VarChar(45)
+  product_id       Int
+  created_on       DateTime?          @db.DateTime(0)
+  title            String?            @db.VarChar(255)
+  description      String?            @db.VarChar(255)
+  product          product            @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "product_id")
+  sku              sku                @relation(fields: [sku_id], references: [sku_id], onDelete: NoAction, onUpdate: NoAction, map: "sku_id")
+  requisition_item requisition_item[]
+
+  @@index([product_id], map: "product_id_idx")
+  @@index([sku_id], map: "sku_id_idx")
 }
 
 model sku {
-  sku_id       String   @id @unique(map: "sku_id_UNIQUE") @db.VarChar(45)
+  sku_id       String        @id @unique(map: "sku_id_UNIQUE") @db.VarChar(45)
   product_id   Int
-  created_date DateTime @db.DateTime(0)
-  description  String?  @db.VarChar(255)
+  created_date DateTime      @db.DateTime(0)
+  description  String?       @db.VarChar(255)
+  batch        batch[]
+  receipt      receipt[]
+  requisition  requisition[]
+  product      product       @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction, map: "sku_product_id")
+
+  @@index([product_id], map: "peoduct_id_idx")
 }
 
-model requistion_item {
-  requistion_item_id Int     @id
-  requisition_id     Int
-  batch_id           Int
-  qty                Int
-  cost               Decimal @db.Decimal(10, 0)
+model requisition_item {
+  requisition_item_id Int         @id @default(autoincrement())
+  requisition_id      Int
+  batch_id            Int
+  qty                 Int
+  cost                Decimal     @db.Decimal(10, 0)
+  batch               batch       @relation(fields: [batch_id], references: [batch_id], onDelete: NoAction, onUpdate: NoAction, map: "batch_id")
+  requisition         requisition @relation(fields: [requisition_id], references: [requisition_id], onDelete: NoAction, onUpdate: NoAction, map: "requisition_id")
+
+  @@index([batch_id], map: "batch_idx")
+  @@index([requisition_id], map: "reauisition_id_idx")
 }
