@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { RequisitionController } from './requisition.controller';
 import { RequisitionService } from './requisition.service';
 import PrismaService from 'src/utils/prisma';
-import { LineService } from 'src/line';
+import { LineModule } from 'src/line';
 
 @Module({
-  imports: [],
+  imports: [LineModule],
   controllers: [RequisitionController],
-  providers: [RequisitionService, PrismaService, LineService],
+  providers: [RequisitionService, PrismaService],
 })
 export default class RequisitionModule {
   constructor() {

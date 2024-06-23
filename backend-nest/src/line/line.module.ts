@@ -6,6 +6,7 @@ import { LineService } from './line.service';
   imports: [],
   controllers: [LineController],
   providers: [LineService],
+  exports: [LineService],
 })
 export default class LineModule {
   constructor() {
