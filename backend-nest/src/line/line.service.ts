@@ -16,10 +16,10 @@ export interface Recription {
   cost: number;
   receipt_id: number;
 }
-const accessToken = env.LINE_TOKEN;
 
 @Injectable()
 export class LineService {
+  accessToken = env.LINE_TOKEN;
   ids: string[] = [];
   sendMessageToLineOffical() {}
   register(message: Message, idUser: string) {
@@ -101,8 +101,9 @@ export class LineService {
   private sendRequest(body: string) {
     let headers = {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${this.accessToken}`,
     };
+    console.log(headers);
     request.post(
       {
         url: 'https://api.line.me/v2/bot/message/push',
@@ -110,6 +111,10 @@ export class LineService {
         body: body,
       },
       (err, res, body) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
         console.log('status = ' + res.statusCode);
       },
     );
