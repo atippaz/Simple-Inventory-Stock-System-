@@ -21,7 +21,12 @@ export interface Recription {
 @Injectable()
 export class LineService {
   accessToken = env.LINE_TOKEN;
-  ids: string[] = [];
+  ids: string[];
+
+  constructor() {
+    console.log('start init line service');
+    this.ids = [];
+  }
   sendMessageToLineOffical() {}
   register(message: Message, idUser: string) {
     console.log(message);
@@ -37,6 +42,8 @@ export class LineService {
   }
   sendReceiptionData() {}
   async sendRequisitionData(payload: RequisitionInsert) {
+    console.log(this.ids);
+    console.log(payload);
     await this.ids.forEach(async (userId) => {
       let body = {
         to: userId,
