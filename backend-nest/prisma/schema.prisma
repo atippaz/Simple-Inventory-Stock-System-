@@ -25,6 +25,7 @@ model batch {
   cost             Decimal            @db.Decimal(10, 0)
   qty              Int
   created_date     DateTime           @db.DateTime(0)
+  expire_date      DateTime?          @db.Date
   sku              sku                @relation(fields: [sku_id], references: [sku_id], onDelete: NoAction, onUpdate: NoAction, map: "batch_sku_id")
   receipt          receipt[]
   requisition_item requisition_item[]
@@ -91,4 +92,13 @@ model requisition_item {
 
   @@index([batch_id], map: "batch_idx")
   @@index([requisition_id], map: "reauisition_id_idx")
+}
+
+model user {
+  user_id       Int     @id @default(autoincrement())
+  user_email    String  @unique(map: "user_email_UNIQUE") @db.VarChar(45)
+  user_password String  @db.LongText
+  first_name    String  @db.VarChar(45)
+  last_name     String  @db.VarChar(45)
+  role          String? @db.VarChar(45)
 }

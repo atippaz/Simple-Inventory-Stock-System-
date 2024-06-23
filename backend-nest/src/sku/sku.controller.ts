@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
 } from '@nestjs/common';
@@ -15,13 +17,20 @@ export class SkuController {
   }
   @Get(':productId/dropdown')
   async getDropdown(@Param('productId') productId: string) {
-    console.log(productId);
-    const res = await this.skuService.getDropdown(parseInt(productId));
-    return res;
+    try {
+      const res = await this.skuService.getDropdown(parseInt(productId));
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
   @Post()
   async insert(@Body() payload: SkuInsert) {
-    const res = await this.skuService.insert(payload);
-    return res;
+    try {
+      const res = await this.skuService.insert(payload);
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

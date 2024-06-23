@@ -3,6 +3,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
 } from '@nestjs/common';
@@ -16,22 +18,33 @@ export class RequisitionController {
 
   @Get()
   async getAll() {
-    const res = await this.requisitionService.getAll();
-    return res;
+    try {
+      const res = await this.requisitionService.getAll();
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Get(':id')
   async getOne(@Param() param) {
-    const res = await this.requisitionService.getOne(parseInt(param.id));
-    console.log(res);
-    return res;
+    try {
+      const res = await this.requisitionService.getOne(parseInt(param.id));
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Post()
   async insertReceipt(@Body() body: RequisitionInsert) {
     if (Object.values(body).some((x) => x === null || x === ''))
       throw new BadRequestException('bad request');
-    const result = await this.requisitionService.insert(body);
-    return result;
+    try {
+      const result = await this.requisitionService.insert(body);
+      return result;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

@@ -68,6 +68,7 @@ export class ProductService {
         };
       });
     } catch (ex) {
+      console.log(ex);
       return [];
     }
   }

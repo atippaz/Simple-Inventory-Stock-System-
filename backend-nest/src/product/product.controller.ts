@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   InternalServerErrorException,
   Param,
   Post,
@@ -16,23 +18,30 @@ export class ProductController {
 
   @Get()
   async getAll() {
-    console.log('sdasdsa');
-
-    const res = await this.productService.getAll();
-    return res;
+    try {
+      const res = await this.productService.getAll();
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
   @Get('dropdown')
   async getDropdown() {
-    console.log('sdasdsa');
-    const res = await this.productService.getDropdown();
-    console.log(res);
-
-    return res;
+    try {
+      const res = await this.productService.getDropdown();
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
   @Get(':id')
   async getOne(@Param() param) {
-    const res = await this.productService.getOne(parseInt(param.id));
-    return res;
+    try {
+      const res = await this.productService.getOne(parseInt(param.id));
+      return res;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @Post()

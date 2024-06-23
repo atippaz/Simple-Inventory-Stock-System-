@@ -1,5 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
 import { LineService } from './line.service';
+import { LineWebHookPayload } from './line.dto';
+
 @Controller('/webhook')
 export class LineController {
   constructor(private readonly lineService: LineService) {
@@ -7,21 +15,15 @@ export class LineController {
   }
 
   @Post()
-  async webHook(@Body() body) {
-    console.log('line');
-    console.log(body);
-    if (!body.events[0]) return;
-    const { events } = body;
-    if (!events) return;
-
-    let reply_token = events[0].replyToken;
-    // if (!array.some((x) => req.body.events[0].source.userId == x)) {
-    //   array.push(req.body.events[0].source.userId);
-    // }
-    this.lineService.replyMessage(reply_token);
-    // res.sendStatus(200);
-    // const res = await this.lineService.getAll();
-    // return res;
-    return '';
+  async webHook(@Body() body: LineWebHookPayload) {
+    if (!body.events) return;
+    if (!body.events.length) return;
+    try {
+      const event = body.events[0];
+      this.lineService.register(event.message, event.source.userId);
+      return;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

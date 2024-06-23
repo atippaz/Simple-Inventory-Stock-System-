@@ -1,11 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-const { parse: uuidParse, stringify: uuidStringify } = require('uuid');
+import { hash } from 'bcrypt';
 
 @Injectable()
 export default class PrismaService extends PrismaClient {
   constructor() {
     super();
+    this.$use(async (params, next) => {
+      if (
+        (params.action === 'create' || params.action === 'update') &&
+        params.model == 'user' &&
+        params.args.data.user_password
+      ) {
+        params.args.data.user_password = await hash(
+          params.args.data.user_password,
+          10,
+        );
+      }
+      return next(params);
+    });
     // this.$use(async (params, next) => {
     //   if (params.action === 'create' || params.action === 'update')
     //     return next(params);
