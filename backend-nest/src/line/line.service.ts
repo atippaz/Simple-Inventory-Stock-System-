@@ -76,6 +76,13 @@ export class LineService {
                             size: 'sm',
                             flex: 5,
                           },
+                        ],
+                      },
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        spacing: 'sm',
+                        contents: [
                           {
                             type: 'text',
                             text: 'description ' + payload.description,
@@ -84,6 +91,13 @@ export class LineService {
                             size: 'sm',
                             flex: 5,
                           },
+                        ],
+                      },
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        spacing: 'sm',
+                        contents: [
                           {
                             type: 'text',
                             text: 'product Id ' + payload.product_id,
@@ -92,6 +106,13 @@ export class LineService {
                             size: 'sm',
                             flex: 5,
                           },
+                        ],
+                      },
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        spacing: 'sm',
+                        contents: [
                           {
                             type: 'text',
                             text: 'sku_id Id ' + payload.sku_id,
@@ -100,6 +121,13 @@ export class LineService {
                             size: 'sm',
                             flex: 5,
                           },
+                        ],
+                      },
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        spacing: 'sm',
+                        contents: [
                           {
                             type: 'text',
                             text: 'quantity ' + payload.qty + ' items',
