@@ -63,16 +63,17 @@ VALUES
  ("test product2", 4, "2024-06-12 13:03:11","test product2"),
  ("\u0e1f\u0e01\u0e01", 11, "2024-06-12 14:36:52","\u0e1f\u0e01\u0e01");
 
-CREATE TABLE IF NOT EXISTS `batch` (
+CREATE TABLE `batch` (
   `batch_id` int NOT NULL AUTO_INCREMENT,
   `sku_id` varchar(45) NOT NULL,
   `cost` decimal(10,0) NOT NULL,
   `qty` int NOT NULL,
   `created_date` datetime NOT NULL,
+  `expire_date` date DEFAULT NULL,
   PRIMARY KEY (`batch_id`),
   KEY `batch_sku_id_idx` (`sku_id`),
   CONSTRAINT `batch_sku_id` FOREIGN KEY (`sku_id`) REFERENCES `sku` (`sku_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 INSERT INTO `inventory`.`batch`
 (`batch_id`,
