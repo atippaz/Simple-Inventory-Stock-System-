@@ -27,12 +27,12 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - serverapi
+      - inventory_service
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt/ssl:/cert
     networks:
-      - inventory_service
+      - myNetwork
 networks:
   myNetwork:
     driver: bridge
