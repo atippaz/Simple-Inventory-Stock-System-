@@ -35,9 +35,12 @@ export class LineService {
       !this.ids.some((x) => x == idUser)
     ) {
       this.ids.push(idUser);
+      console.log(this.ids);
       this.sendMessageToUserId(idUser, 'register success');
       return;
     }
+    console.log(this.ids);
+
     // this.lineService.replyMessage(reply_token);
   }
   sendReceiptionData() {}
