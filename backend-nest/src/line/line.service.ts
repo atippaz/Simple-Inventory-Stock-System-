@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { env } from 'process';
 import * as request from 'request';
 import { Message } from './line.dto';
+import { RequisitionInsert } from 'src/requisition/recript.dto';
 export interface Recription {
   product_id: number;
   product_name: string;
@@ -34,8 +35,103 @@ export class LineService {
     }
     // this.lineService.replyMessage(reply_token);
   }
-  sendRequisitionData() {}
   sendReceiptionData() {}
+  async sendRequisitionData(payload: RequisitionInsert) {
+    await this.ids.forEach(async (userId) => {
+      let body = {
+        to: userId,
+        messages: [
+          {
+            type: 'flex', // 1
+            altText: 'This is a Flex Message',
+            contents: {
+              type: 'bubble',
+              body: {
+                type: 'box',
+                layout: 'vertical',
+                contents: [
+                  {
+                    type: 'box',
+                    layout: 'vertical',
+                    margin: 'lg',
+                    spacing: 'sm',
+                    contents: [
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        spacing: 'sm',
+                        contents: [
+                          {
+                            type: 'text',
+                            text: 'title ' + payload.title,
+                            wrap: true,
+                            color: '#666666',
+                            size: 'sm',
+                            flex: 5,
+                          },
+                          {
+                            type: 'text',
+                            text: 'description ' + payload.description,
+                            wrap: true,
+                            color: '#666666',
+                            size: 'sm',
+                            flex: 5,
+                          },
+                          {
+                            type: 'text',
+                            text: 'product Id ' + payload.product_id,
+                            wrap: true,
+                            color: '#666666',
+                            size: 'sm',
+                            flex: 5,
+                          },
+                          {
+                            type: 'text',
+                            text: 'sku_id Id ' + payload.sku_id,
+                            wrap: true,
+                            color: '#666666',
+                            size: 'sm',
+                            flex: 5,
+                          },
+                          {
+                            type: 'text',
+                            text: 'quantity ' + payload.qty + ' items',
+                            wrap: true,
+                            color: '#666666',
+                            size: 'sm',
+                            flex: 5,
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+              footer: {
+                type: 'box',
+                layout: 'vertical',
+                spacing: 'sm',
+                contents: [
+                  {
+                    type: 'button',
+                    style: 'link',
+                    height: 'sm',
+                    action: {
+                      type: 'uri',
+                      label: 'Contract',
+                      uri: 'https://github.com/atippaz',
+                    },
+                  },
+                ],
+                flex: 0,
+              },
+            },
+          },
+        ],
+      };
+      await this.sendRequest(JSON.stringify(body));
+    });
+  }
   sendMessageToUserId(userId, text) {
     let body = {
       to: userId,
@@ -98,13 +194,13 @@ export class LineService {
     };
     this.sendRequest(JSON.stringify(body));
   }
-  private sendRequest(body: string) {
+  private async sendRequest(body: string) {
     let headers = {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.accessToken}`,
     };
     console.log(headers);
-    request.post(
+    await request.post(
       {
         url: 'https://api.line.me/v2/bot/message/push',
         headers: headers,
